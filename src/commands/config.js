@@ -2,8 +2,6 @@ const Fs = require('fs')
 const Path = require('path')
 const { promisify } = require('util')
 const Os = require('os')
-const IpfsApi = require('ipfs-api')
-const Ipld = require('../lib/ipld/ipld')
 const debug = require('debug')('ipld-explorer-cli:commands:config')
 const { getHomePath } = require('./cd')
 

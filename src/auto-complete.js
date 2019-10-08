@@ -10,44 +10,44 @@ class AutoComplete {
   }
 
   // Update the auto-completion list based on the passed context
-  async updateList ({ ipld, ipfs, wd, spinner }) {
+  async updateList ({ wd, spinner }) {
     if (spinner) spinner.text = 'Updating auto-complete list'
 
     const cmdNames = Object.keys(Commands)
-    const { cid, remainderPath } = await ipld.resolve(wd)
+    // const { cid, remainderPath } = await ipld.resolve(wd)
     let autoCompleteLinks = []
 
-    if (cid.codec === 'dag-pb' && !remainderPath) {
-      const value = await ipld.get(wd)
-      autoCompleteLinks = value.links.reduce((ac, l) => {
-        if (!l.name) return ac
-        return ac.concat(cmdNames.map(n => `${n} ${l.name}`))
-      }, [])
-    } else {
-      let tree = await ipld.tree(cid)
+    // if (cid.codec === 'dag-pb' && !remainderPath) {
+    //   const value = await ipld.get(wd)
+    //   autoCompleteLinks = value.links.reduce((ac, l) => {
+    //     if (!l.name) return ac
+    //     return ac.concat(cmdNames.map(n => `${n} ${l.name}`))
+    //   }, [])
+    // } else {
+    //   let tree = await ipld.tree(cid)
 
-      debug('tree', tree)
-      debug('path', wd)
-      debug('remainderPath', remainderPath)
+    //   debug('tree', tree)
+    //   debug('path', wd)
+    //   debug('remainderPath', remainderPath)
 
-      if (remainderPath) {
-        tree = tree
-          // Filter out paths below requested level
-          .filter(t => t.startsWith(remainderPath))
-          // Remove remainder path from paths
-          .map(t => t.slice(remainderPath.length))
-          .map(t => t.startsWith('/') ? t.slice(1) : t)
-          .filter(Boolean)
+    //   if (remainderPath) {
+    //     tree = tree
+    //       // Filter out paths below requested level
+    //       .filter(t => t.startsWith(remainderPath))
+    //       // Remove remainder path from paths
+    //       .map(t => t.slice(remainderPath.length))
+    //       .map(t => t.startsWith('/') ? t.slice(1) : t)
+    //       .filter(Boolean)
 
-        debug('filtered tree', tree)
-      }
+    //     debug('filtered tree', tree)
+    //   }
 
-      autoCompleteLinks = tree.reduce((ac, key) => {
-        return ac.concat(cmdNames.map(n => `${n} ${key}`))
-      }, [])
-    }
+    //   autoCompleteLinks = tree.reduce((ac, key) => {
+    //     return ac.concat(cmdNames.map(n => `${n} ${key}`))
+    //   }, [])
+    // }
 
-    this._list = cmdNames.concat(autoCompleteLinks)
+    this._list = cmdNames
   }
 
   // Given a string of chars typed by the user, return a list of auto-completion
@@ -73,7 +73,7 @@ exports.withAutoComplete = (fn) => {
       console.warn(`${Chalk.yellow('⚠')} failed to update auto-complete list`)
       debug(err)
     }
-
+    debug('auto-complete')
     return fn.apply(this, arguments)
   }
 }

@@ -1,6 +1,5 @@
 const { inspect } = require('util')
 const debug = require('debug')('ipld-explorer-cli:formatters:data')
-const CID = require('cids')
 
 const Formatters = {
   'dag-json': formatDagJsonData,

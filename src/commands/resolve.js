@@ -1,7 +1,5 @@
 const Path = require('path').posix
 const debug = require('debug')('ipld-explorer-cli:commands:resolve')
-const isIpfs = require('is-ipfs')
-const CID = require('cids')
 const Formatters = require('../formatters')
 
 module.exports = async function resolve ({ ipld, ipfs, wd, spinner }, path) {

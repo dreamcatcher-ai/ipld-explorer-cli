@@ -33,7 +33,10 @@ XKCD                     QmdmQXB2mzChmMeKY47C43LxUdg1NDJ5MWcKMKxDu7RgQm
 
     await print(async () => {
       const res = await opts.evaluate(ctx, cmd, cmdArgs)
-      if (res && res.ctx) Object.assign(ctx, res.ctx)
+      debug( res)
+      if (res && res.ctx) {
+         Object.assign(ctx, res.ctx)
+      }
       return res
     })
   })

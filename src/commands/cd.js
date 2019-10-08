@@ -1,32 +1,23 @@
-const Path = require('path').posix
-const debug = require('debug')('ipld-explorer-cli:commands:cd')
-const isIpfs = require('is-ipfs')
+const Path = require("path").posix;
+const debug = require("debug")("ipld-explorer-cli:commands:cd");
 
-async function cd ({ ipld, ipfs, wd, spinner }, path) {
-  path = path || await getHomePath(ipfs)
+async function cd({ wd, spinner }, path) {
+  path = path || "~/";
 
-  if (isIpfs.cid(path) || isIpfs.cid(path.split('/')[0])) {
-    path = `/ipfs/${path}`
-  } else {
-    if (path[0] !== '/') {
-      path = Path.join(wd, path)
-    }
-
-    path = Path.resolve(path)
+  if (path[0] !== "/" && path[0] !== "~") {
+    path = Path.join(wd, path);
+  }
+  if (path !== "~/") {
+    path = Path.resolve(path);
   }
 
-  debug(path)
+  debug(path);
 
-  if (spinner) spinner.text = `Resolving ${path}`
-  await ipld.get(path)
+  if (spinner) {
+    spinner.text = `Resolving ${path}`
+  }
 
-  return { out: path, ctx: { wd: path } }
+  return { out: path, ctx: { wd: path } };
 }
 
-async function getHomePath (ipfs) {
-  const hash = (await ipfs.files.stat('/')).hash
-  return `/ipfs/${hash}`
-}
-
-module.exports = cd
-module.exports.getHomePath = getHomePath
+module.exports = cd;
